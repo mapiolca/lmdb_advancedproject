@@ -1,6 +1,6 @@
 # ADVANCED PROJECT FOR [DOLIBARR ERP CRM](https://www.dolibarr.org)
 
-Current version: **1.3.0**
+Current version: **1.3.1**
 
 ## Features
 

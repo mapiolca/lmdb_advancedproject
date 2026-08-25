@@ -54,9 +54,8 @@ class modLmdbAdvancedProject extends DolibarrModules
 
 		$this->editor_name = 'Les Métiers du Bâtiment';
 		$this->editor_url = 'https://lesmetiersdubatiment.fr';
-		$this->editor_email = 'developpeur@lesmetiersdubatiment.fr';
 
-		$this->version = '1.3.0';
+		$this->version = '1.3.1';
 		$this->const_name = 'MAIN_MODULE_LMDBADVANCEDPROJECT';
 		$this->picto = 'project';
 

@@ -1,5 +1,9 @@
 # CHANGELOG ADVANCED PROJECT FOR [DOLIBARR ERP CRM](https://www.dolibarr.org)
 
+## 1.3.1
+
+- Remove the unsupported dynamic editor email property from the module descriptor for PHP 8.2 compatibility.
+
 ## 1.3.0
 
 - Add native customer-order list links and evenly spaced detail tooltips to global report totals, plus an access-aware project multiselect filter shared with exports
