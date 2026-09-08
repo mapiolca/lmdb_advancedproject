@@ -4,7 +4,7 @@
 
 - Add entity-specific, disabled-by-default shipment valuation using frozen net supplier tariffs or native PMP, with historical price evidence retained across deactivation and revalidation.
 - Reconcile project/product quantities with allocated supplier invoices and remaining purchase commitments; recognize dated regularizations without changing accounting or stock.
-- Add the native project product list, explanatory tooltips and incomplete-valuation warnings; share calculations across reports, categories, signed charts and PDF/XLSX/ODS outputs, with measured native PDF footers.
+- Add the native project product list, explanatory tooltips and incomplete-valuation warnings; share calculations across reports, categories, signed charts and PDF/XLSX/ODS outputs, with measured native PDF footers and the configured currency on the shipment-cost summary.
 - Install two idempotent historical tables and a listener for native shipment/price events (including the v23 price-event rename); reactivate the module after update, then enable the option per entity.
 - Use direct native permissions and entity-bound settings; add regression tests and PHPStan level 5 / PHP 8.0 analysis. Document source-level v20–v24 compatibility and the remaining operational Dolibarr/Multicompany validation.
 
