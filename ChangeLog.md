@@ -1,6 +1,6 @@
 # CHANGELOG ADVANCED PROJECT FOR [DOLIBARR ERP CRM](https://www.dolibarr.org)
 
-## Unreleased
+## 1.4.0
 
 - Add entity-specific, disabled-by-default shipment valuation using frozen net supplier tariffs or native PMP, with historical price evidence retained across deactivation and revalidation.
 - Reconcile project/product quantities with allocated supplier invoices and remaining purchase commitments; recognize dated regularizations without changing accounting or stock.

@@ -1,6 +1,6 @@
 # ADVANCED PROJECT FOR [DOLIBARR ERP CRM](https://www.dolibarr.org)
 
-Current version: **1.3.0**
+Current version: **1.4.0**
 
 ## Features
 
@@ -26,7 +26,7 @@ Spreadsheet exports require the PhpSpreadsheet library bundled with Dolibarr 20 
 
 Date range and project status filters on the global report are preserved in spreadsheet exports. Supplier spending is split between ordered supplier orders, delivered supplier orders, and supplier invoices, with percentages displayed in the Spent tile. Detail modals include totals, localized dates, and Dolibarr document links.
 
-## Optional shipment costs (development)
+## Optional shipment costs
 
 An entity-specific switch adds provisional costs for shipped products not yet covered by supplier invoices. Choose the latest historical net supplier tariff or the native PMP frozen at shipment validation. Invoices later replace the provisional valuation; dated adjustments preserve period totals. Both historical values are retained, including after disabling the option. Unknown historical prices are reported as incomplete instead of using current prices.
 
