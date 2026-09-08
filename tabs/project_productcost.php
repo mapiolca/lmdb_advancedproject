@@ -40,6 +40,7 @@ if (!$res) {
 global $db, $user, $conf, $langs, $hookmanager;
 
 require_once DOL_DOCUMENT_ROOT.'/projet/class/project.class.php';
+require_once DOL_DOCUMENT_ROOT.'/product/class/product.class.php';
 require_once DOL_DOCUMENT_ROOT.'/core/lib/project.lib.php';
 require_once DOL_DOCUMENT_ROOT.'/core/lib/ajax.lib.php';
 require_once __DIR__.'/../lib/budgetreport.lib.php';
@@ -178,7 +179,17 @@ foreach ($visibleRows as $row) {
 		$value = $row[$field];
 		print '<td class="'.(is_float($value) ? 'right' : '').'"'.($field === 'entities' ? ' align="center"' : '').'>';
 		if ($field === 'ref') {
-			print dol_escape_htmltag($value);
+			if (($row['type'] === Product::TYPE_PRODUCT && $user->hasRight('product', 'read'))
+				|| ($row['type'] === Product::TYPE_SERVICE && $user->hasRight('service', 'read'))) {
+				$productLink = new Product($db);
+				$productLink->id = $row['product'];
+				$productLink->ref = $row['ref'];
+				$productLink->label = $row['label'];
+				$productLink->type = $row['type'];
+				print $productLink->getNomUrl(1);
+			} else {
+				print dol_escape_htmltag($value);
+			}
 		} elseif ($field === 'type') {
 			print $langs->trans($value === 1 ? 'Service' : 'Product');
 		} elseif ($field === 'issues') {
