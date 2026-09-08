@@ -51,11 +51,17 @@ if (!LmdbAdvancedProjectCompatibility::isShipmentCostEnabled() || !$user->hasRig
 	accessforbidden();
 }
 $id = GETPOSTINT('id');
+$ref = GETPOST('ref', 'alpha');
 $object = new Project($db);
-if ($object->fetch($id) <= 0 || $object->restrictedProjectArea($user, 'read') <= 0) {
+if ($object->fetch($id, $ref) <= 0 || $object->restrictedProjectArea($user, 'read') <= 0) {
 	accessforbidden();
 }
+$id = (int) $object->id;
 restrictedArea($user, 'projet', $id, 'projet&project');
+$thirdpartyResult = $object->fetch_thirdparty();
+if ($thirdpartyResult < 0) {
+	setEventMessages($object->error, $object->errors, 'errors');
+}
 $action = GETPOST('action', 'aZ09');
 $contextpage = 'lmdbadvancedproject_productcost';
 $search = array('ref' => GETPOST('search_ref', 'alphanohtml'), 'label' => GETPOST('search_label', 'alphanohtml'),
@@ -69,7 +75,7 @@ $filters = lmdbadvancedproject_normalize_budget_report_filters(array(
 	'date_end' => $resetFilters ? '' : lmdbadvancedproject_get_budget_report_request_date('date_end'),
 	'exclude_content_outside_period' => '1',
 ));
-$hookmanager->initHooks(array('projectproductcost', 'projectcard'));
+$hookmanager->initHooks(array('projectproductcost', 'projectcard', 'globalcard'));
 $parameters = array('id' => $id, 'filters' => $filters);
 if ($hookmanager->executeHooks('doActions', $parameters, $object, $action) < 0) {
 	setEventMessages($hookmanager->error, $hookmanager->errors, 'errors');
@@ -135,8 +141,24 @@ $visibleRows = array_slice($rows, $page * $limit, $limit);
 $param = '&id='.$id.'&'.http_build_query(array('search_ref' => $search['ref'], 'search_label' => $search['label'],
 	'search_type' => $search['type'], 'search_entities' => $search['entities'], 'date_start' => $filters['date_start'], 'date_end' => $filters['date_end']));
 llxHeader('', $langs->trans('BudgetCostProductList'), '', '', 0, 0, '', '', '', 'classforhorizontalscrolloftabs');
-print dol_get_fiche_head(project_prepare_head($object), 'lmdbap_productcost', $langs->trans('Project'), -1, 'project');
-dol_banner_tab($object, 'ref', '<a href="'.DOL_URL_ROOT.'/projet/list.php">'.$langs->trans('BackToList').'</a>');
+print dol_get_fiche_head(project_prepare_head($object), 'lmdbap_productcost', $langs->trans('Project'), -1, ($object->public ? 'projectpub' : 'project'));
+if (!empty($_SESSION['pageforbacktolist']['project'])) {
+	$tmpurl = str_replace('__SOCID__', (string) $object->socid, $_SESSION['pageforbacktolist']['project']);
+	$linkback = '<a href="'.dol_escape_htmltag($tmpurl.(strpos($tmpurl, '?') !== false ? '&' : '?').'restore_lastsearch_values=1').'">'.$langs->trans('BackToList').'</a>';
+} else {
+	$linkback = '<a href="'.DOL_URL_ROOT.'/projet/list.php?restore_lastsearch_values=1">'.$langs->trans('BackToList').'</a>';
+}
+$morehtmlref = '<div class="refidno">'.dol_escape_htmltag($object->title);
+if ($thirdpartyResult > 0 && is_object($object->thirdparty) && $object->thirdparty->id > 0) {
+	$morehtmlref .= '<br>'.$object->thirdparty->getNomUrl(1, 'project');
+}
+$morehtmlref .= '</div>';
+// Keep the native previous/next navigation within the user's project access.
+if (!$user->hasRight('projet', 'all', 'lire')) {
+	$objectsListId = $object->getProjectsAuthorizedForUser($user, 0, 0);
+	$object->next_prev_filter = 'rowid IN ('.$db->sanitize(is_array($objectsListId) && $objectsListId ? implode(',', array_keys($objectsListId)) : '0').')';
+}
+dol_banner_tab($object, 'ref', $linkback, 1, 'ref', 'ref', $morehtmlref);
 lmdbadvancedproject_print_cost_notice($report);
 print '<form method="POST" action="'.dol_escape_htmltag($_SERVER['PHP_SELF']).'" name="formfilter" id="formfilter">';
 print '<input type="hidden" name="token" value="'.newToken().'">';
